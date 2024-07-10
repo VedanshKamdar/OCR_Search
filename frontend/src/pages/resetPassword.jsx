@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useCallback } from 'react';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -13,9 +14,11 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
 import { ENDPOINT_URLS } from '../urls';
 import { http } from '../http';
 import { useNotification } from '../context/notification';
+
 
 const ResetPassword = () => {
   const { token } = useParams();

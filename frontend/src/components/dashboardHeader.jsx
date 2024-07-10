@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { keyframes } from '@mui/system';
+
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -12,9 +14,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { keyframes } from '@mui/system';
+
 import { useNavigate } from 'react-router-dom';
-import '@fontsource/roboto/500.css';
 
 const pages = [];
 const settings = ['Profile', 'Change Password', 'Logout'];
@@ -168,7 +169,7 @@ function DashboardHeader() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={() => handlePageClick(page)}
+                onClick={handlePageClick}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}

@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import { styled } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+
 import { ENDPOINT_URLS } from '../urls';
 import { http } from '../http';
 
@@ -43,7 +44,7 @@ const FileUpload = ({ onClose, onUploadSuccess }) => {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const authToken = localStorage.getItem('token');
 
-  const handleFileChange = (event) => {
+  const handleFileChange = useCallback((event) => {
     const file = event.target.files[0];
 
     // Check file size (5MB = 5 * 1024 * 1024 bytes)
@@ -65,9 +66,9 @@ const FileUpload = ({ onClose, onUploadSuccess }) => {
     } else {
       setImagePreview(null);
     }
-  };
+  }, []);
 
-  const handleUpload = async () => {
+  const handleUpload = useCallback(async () => {
     if (!selectedFile) {
       setSnackbarMessage('Please select a file first.');
       setSnackbarSeverity('error');
@@ -108,11 +109,11 @@ const FileUpload = ({ onClose, onUploadSuccess }) => {
       setIsLoading(false);
       onClose();
     }
-  };
+  }, [selectedFile, authToken, onClose, onUploadSuccess]);
 
-  const handleSnackbarClose = () => {
+  const handleSnackbarClose = useCallback(() => {
     setOpenSnackbar(false);
-  };
+  }, []);
 
   return (
     <ModalContainer>

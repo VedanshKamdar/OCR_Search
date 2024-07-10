@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Dialog from '@mui/material/Dialog';
@@ -7,11 +8,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
+
 import DashboardHeader from '../../components/dashboardHeader';
 import SearchAndUpload from '../../components/searchAndUpload';
 import FileCard from './fileCard';
 import FileDialog from './fileDialog';
+
 import './files.css';
+
 import { ENDPOINT_URLS } from '../../urls';
 import { http } from '../../http';
 import { useNotification } from '../../context/notification';

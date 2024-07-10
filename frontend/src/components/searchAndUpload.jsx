@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -20,15 +20,15 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: 25,
-  backgroundColor: alpha('#ffffff', 0.15), // Light grey background
+  backgroundColor: alpha('#ffffff', 0.15),
   '&:hover': {
-    backgroundColor: alpha('#ffffff', 0.25), // Lighten on hover if needed
+    backgroundColor: alpha('#ffffff', 0.25),
   },
   marginLeft: 0,
   width: '100%',
   [theme.breakpoints.up('sm')]: {
     marginLeft: theme.spacing(3),
-    width: '30ch', // Adjusted width for larger search bar
+    width: '30ch',
   },
 }));
 
@@ -40,11 +40,11 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  color: theme.palette.text.secondary, // Icon color
+  color: theme.palette.text.secondary,
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: '#B7D1E7', // Text color
+  color: '#B7D1E7',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
@@ -53,24 +53,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     [theme.breakpoints.up('md')]: {
       width: '20ch',
     },
-    fontFamily: 'Montserrat', // Font family
+    fontFamily: 'Montserrat',
     '&::placeholder': {
-      color: '#B7D1E7', // Placeholder color
-      opacity: 1, // Ensure placeholder is fully visible
-      fontFamily: 'Montserrat', // Font family
+      color: '#B7D1E7',
+      opacity: 1,
+      fontFamily: 'Montserrat',
     },
   },
 }));
 
 const UploadButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#B7D1E7', // Button background color
+  backgroundColor: '#B7D1E7',
   fontWeight: 'bold',
   marginRight: theme.spacing(3),
   width: '30ch',
-  color: '#041d32c2', // Button text color
-  borderRadius: 25, // Rounded borders
+  color: '#041d32c2',
+  borderRadius: 25,
   '&:hover': {
-    backgroundColor: '#ec7063', // Hover background color (mauve)
+    backgroundColor: '#ec7063',
   },
 }));
 
@@ -78,19 +78,22 @@ const SearchAndUpload = ({ onUploadSuccess, onSearch }) => {
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const handleUploadClick = () => {
+  const handleUploadClick = useCallback(() => {
     setOpenUploadDialog(true);
-  };
+  }, []);
 
-  const handleCloseUploadDialog = () => {
+  const handleCloseUploadDialog = useCallback(() => {
     setOpenUploadDialog(false);
-  };
+  }, []);
 
-  const handleSearchChange = (event) => {
-    const { value } = event.target;
-    setSearchTerm(value);
-    onSearch(value);
-  };
+  const handleSearchChange = useCallback(
+    (event) => {
+      const { value } = event.target;
+      setSearchTerm(value);
+      onSearch(value);
+    },
+    [onSearch]
+  );
 
   return (
     <StyledAppBar position="static">
@@ -106,8 +109,7 @@ const SearchAndUpload = ({ onUploadSuccess, onSearch }) => {
             onChange={handleSearchChange}
           />
         </Search>
-        <div style={{ flexGrow: 1 }} />{' '}
-        {/* Ensures UploadButton stays on the right */}
+        <div style={{ flexGrow: 1 }} />
         <UploadButton variant="contained" onClick={handleUploadClick}>
           Upload File
         </UploadButton>

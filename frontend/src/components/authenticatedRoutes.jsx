@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { CircularProgress, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+
 import { ProfileProvider, useProfile } from '../context/profileContext';
 import { ENDPOINT_URLS } from '../urls';
 import { http } from '../http';

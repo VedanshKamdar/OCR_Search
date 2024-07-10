@@ -1,4 +1,6 @@
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -6,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Avatar from '@mui/material/Avatar';
-import { useNavigate } from 'react-router-dom';
+
 import DashboardHeader from '../components/dashboardHeader';
 import { useProfile } from '../context/profileContext';
 import { useNotification } from '../context/notification';

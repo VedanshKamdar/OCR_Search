@@ -1,9 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { http } from '../http';
-import { useNotification } from '../context/notification';
-
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -19,9 +16,12 @@ import InputAdornment from '@mui/material/InputAdornment';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { ENDPOINT_URLS } from '../urls';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+
+import { http } from '../http';
+import { useNotification } from '../context/notification';
+import { ENDPOINT_URLS } from '../urls';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()

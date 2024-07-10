@@ -1,13 +1,16 @@
 import { useState, useCallback } from 'react';
+import { debounce } from 'lodash';
+
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
-import { debounce } from 'lodash';
 import DashboardHeader from '../../components/dashboardHeader';
 import FileCard from './fileCard';
 import FileDialog from './fileDialog';
+
 import './dashboard.css';
+
 import { ENDPOINT_URLS } from '../../urls';
 import { http } from '../../http';
 import { useNotification } from '../../context/notification';

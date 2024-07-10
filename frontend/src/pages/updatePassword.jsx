@@ -13,12 +13,14 @@ import Paper from '@mui/material/Paper';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import { ENDPOINT_URLS } from '../urls';
 import DashboardHeader from '../components/dashboardHeader';
 import { http } from '../http';
 import { useNotification } from '../context/notification';
-import * as Yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
+
 
 const validationSchema = Yup.object().shape({
   currentPassword: Yup.string().required('Current password is required'),
