@@ -1,15 +1,19 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const fileSchema = new mongoose.Schema({
+const fileSchema = new mongoose.Schema(
+  {
     filename: { type: String, required: true },
     path: { type: String, required: true },
     status: { type: String, default: 'uploaded' },
     text: { type: String },
-    pdfPath: { type: String },
+    pdfUrl: { type: String },
+    pdfName: { type: String },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-}, {
+  },
+  {
     timestamps: true,
-});
+  }
+);
 
 fileSchema.index({ text: 'text' });
 
