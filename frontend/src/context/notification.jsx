@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useState } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import PropTypes from 'prop-types';
 
 const NotificationContext = createContext();
 
@@ -33,6 +34,10 @@ export const NotificationProvider = ({ children }) => {
       </Snackbar>
     </NotificationContext.Provider>
   );
+};
+
+NotificationProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export const useNotification = () => useContext(NotificationContext);

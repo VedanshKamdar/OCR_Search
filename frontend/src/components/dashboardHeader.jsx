@@ -83,7 +83,6 @@ function DashboardHeader() {
 
   const handleFileUploadClick = () => {
     navigate('/files');
-    console.log('File Upload clicked');
   };
 
   return (

@@ -12,12 +12,10 @@ dotenv.config();
 const app = express();
 
 app.use(bodyParser.json());
-
 app.use(cors());
+app.use(express.json({ extended: false }));
 
 connectDB();
-
-app.use(express.json({ extended: false }));
 
 app.use('/v1/api/auth', authRoutes);
 app.use('/v1/api/files', fileRoutes);

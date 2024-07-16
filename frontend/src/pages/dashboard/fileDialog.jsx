@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -37,6 +38,13 @@ const FileDialog = ({ viewFile, onClose }) => {
       </DialogActions>
     </Dialog>
   );
+};
+
+FileDialog.propTypes = {
+  viewFile: PropTypes.shape({
+    pdfUrl: PropTypes.string.isRequired,
+  }),
+  onClose: PropTypes.func.isRequired,
 };
 
 export default FileDialog;

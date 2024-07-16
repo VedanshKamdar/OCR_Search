@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
-import DashboardHeader from '../../components/dashboardHeader';
 import FileCard from './fileCard';
 import FileDialog from './fileDialog';
 
@@ -14,6 +13,7 @@ import './dashboard.css';
 import { ENDPOINT_URLS } from '../../urls';
 import { http } from '../../http';
 import { useNotification } from '../../context/notification';
+import Page from '../../components/page';
 
 const CenteredContainer = styled('div')({
   display: 'flex',
@@ -149,43 +149,44 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="dashboard">
-      <DashboardHeader />
-      <CenteredContainer>
-        <Typography variant="h3" className="title">
-          Explore and find your files easily through keywords...
-        </Typography>
-        <SearchContainer>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-            />
-          </Search>
-        </SearchContainer>
-      </CenteredContainer>
+    <Page>
+      <div className="dashboard">
+        <CenteredContainer>
+          <Typography variant="h3" className="title">
+            Explore and find your files easily through keywords...
+          </Typography>
+          <SearchContainer>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+              />
+            </Search>
+          </SearchContainer>
+        </CenteredContainer>
 
-      {!loading && files.length > 0 && searchTerm.trim() !== '' && (
-        <div className="file-list">
-          {files.map((file) => (
-            <FileCard key={file._id} file={file} onViewClick={handleView} />
-          ))}
-        </div>
-      )}
+        {!loading && files.length > 0 && searchTerm.trim() !== '' && (
+          <div className="file-list">
+            {files.map((file) => (
+              <FileCard key={file._id} file={file} onViewClick={handleView} />
+            ))}
+          </div>
+        )}
 
-      {loading && (
-        <div className="loading-spinner">
-          <CircularProgress />
-        </div>
-      )}
+        {loading && (
+          <div className="loading-spinner">
+            <CircularProgress />
+          </div>
+        )}
 
-      <FileDialog viewFile={viewFile} onClose={handleCloseViewFile} />
-    </div>
+        <FileDialog viewFile={viewFile} onClose={handleCloseViewFile} />
+      </div>
+    </Page>
   );
 };
 

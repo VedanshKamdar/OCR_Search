@@ -9,8 +9,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 
-import DashboardHeader from '../../components/dashboardHeader';
-import SearchAndUpload from '../../components/searchAndUpload';
+import SearchAndUpload from './searchAndUpload';
 import FileCard from './fileCard';
 import FileDialog from './fileDialog';
 
@@ -19,14 +18,16 @@ import './files.css';
 import { ENDPOINT_URLS } from '../../urls';
 import { http } from '../../http';
 import { useNotification } from '../../context/notification';
+import Page from '../../components/page';
 
 const Files = () => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [fileToDelete, setFileToDelete] = useState(null);
+  const [fileViewDelete, setFileViewDelete] = useState({
+    open: false,
+    fileToDelete: null,
+  });
   const [deleting, setDeleting] = useState(false);
-  const [error, setError] = useState(null);
   const [viewFile, setViewFile] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -39,10 +40,8 @@ const Files = () => {
         setFiles(response.data.files || []);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching files:', error);
-        setError('Failed to load files.');
-        setLoading(false);
         showNotification('Failed to load files.', 'error');
+        setLoading(false);
       }
     };
     fetchFiles();
@@ -53,21 +52,24 @@ const Files = () => {
   }, []);
 
   const handleDelete = useCallback(async () => {
-    if (!fileToDelete) return;
+    if (!fileViewDelete.fileToDelete) return;
 
     setDeleting(true);
     try {
-      await http.delete(`${ENDPOINT_URLS.FILES}/${fileToDelete._id}`);
-      setFiles(files.filter((file) => file._id !== fileToDelete._id));
-      setOpenDialog(false);
-      setDeleting(false);
+      await http.delete(
+        `${ENDPOINT_URLS.FILES}/${fileViewDelete.fileToDelete._id}`
+      );
+      setFiles(
+        files.filter((file) => file._id !== fileViewDelete.fileToDelete._id)
+      );
       showNotification('File deleted successfully', 'success');
     } catch (error) {
-      setError('Failed to delete file.');
-      setDeleting(false);
       showNotification('Failed to delete file', 'error');
+    } finally {
+      setFileViewDelete({ ...fileViewDelete, open: false });
+      setDeleting(false);
     }
-  }, [fileToDelete, files, showNotification]);
+  }, [fileViewDelete, files, showNotification]);
 
   const handleView = useCallback(
     async (file) => {
@@ -92,7 +94,6 @@ const Files = () => {
         { ...newFile, uploadStatus: 'uploaded' },
       ]);
       showNotification('File uploaded successfully', 'success');
-
       pollFileStatus(newFile._id);
     },
     [showNotification]
@@ -136,64 +137,71 @@ const Files = () => {
 
   return (
     <div className="files-root">
-      <DashboardHeader />
-      <SearchAndUpload
-        onUploadSuccess={handleUploadSuccess}
-        onSearch={handleSearchChange}
-      />
-      {loading ? (
-        <CircularProgress />
-      ) : error ? (
-        <Typography color="error">{error}</Typography>
-      ) : filteredFiles.length === 0 ? (
-        <Typography
-          variant="h6"
-          align="center"
-          style={{ margin: '20px 0', color: 'white' }}
-        >
-          Sorry, No files to display!
-        </Typography>
-      ) : (
-        <div className="files-grid">
-          {filteredFiles.map((file) => (
-            <FileCard
-              key={file._id}
-              file={file}
-              onView={handleView}
-              onDelete={() => {
-                setFileToDelete(file);
-                setOpenDialog(true);
-              }}
-            />
-          ))}
-        </div>
-      )}
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete the file &quot;
-            {fileToDelete?.filename}?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setOpenDialog(false)}
-            color="primary"
-            disabled={deleting}
+      <Page>
+        <SearchAndUpload
+          onUploadSuccess={handleUploadSuccess}
+          onSearch={handleSearchChange}
+        />
+        {loading ? (
+          <CircularProgress />
+        ) : filteredFiles.length === 0 ? (
+          <Typography
+            variant="h6"
+            align="center"
+            style={{ margin: '20px 0', color: 'white' }}
           >
-            Cancel
-          </Button>
-          <Button onClick={handleDelete} color="secondary" disabled={deleting}>
-            {deleting ? <CircularProgress size={24} /> : 'Delete'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <FileDialog
-        open={!!viewFile}
-        file={viewFile}
-        onClose={() => setViewFile(null)}
-      />
+            Sorry, No files to display!
+          </Typography>
+        ) : (
+          <div className="files-grid">
+            {filteredFiles.map((file) => (
+              <FileCard
+                key={file._id}
+                file={file}
+                onView={handleView}
+                onDelete={() => {
+                  setFileViewDelete({ open: true, fileToDelete: file });
+                }}
+              />
+            ))}
+          </div>
+        )}
+        <Dialog
+          open={fileViewDelete.open}
+          onClose={() => setFileViewDelete({ ...fileViewDelete, open: false })}
+        >
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete the file &quot;
+              {fileViewDelete.fileToDelete?.filename}?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() =>
+                setFileViewDelete({ ...fileViewDelete, open: false })
+              }
+              color="primary"
+              disabled={deleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDelete}
+              color="secondary"
+              disabled={deleting}
+            >
+              {deleting ? <CircularProgress size={24} /> : 'Delete'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <FileDialog
+          open={!!viewFile}
+          file={viewFile}
+          onClose={() => setViewFile(null)}
+        />
+      </Page>
     </div>
   );
 };

@@ -1,26 +1,22 @@
 const multer = require('multer');
 const { fork } = require('child_process');
 const { check, validationResult } = require('express-validator');
+const path = require('path');
 const File = require('../models/file');
-var azure = require('azure-storage');
-const { BlobServiceClient } = require('@azure/storage-blob');
-var blobService = azure.createBlobService();
+const azureBlobService = require('../services/azureBlobService');
+
 require('dotenv').config();
 
-const blobServiceClient = BlobServiceClient.fromConnectionString(
-  process.env.AZURE_STORAGE_CONNECTION_STRING
-);
-
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: (req, file, cb) => {
     cb(null, 'uploads/');
   },
-  filename: function (req, file, cb) {
+  filename: (req, file, cb) => {
     cb(null, file.originalname);
   },
 });
 
-const upload = multer({ storage: storage }).single('file');
+const upload = multer({ storage }).single('file');
 
 const validateFileUpload = [
   check('file').custom((value, { req }) => {
@@ -56,9 +52,7 @@ const uploadFile = async (req, res) => {
     try {
       await newFile.save();
 
-      const process = fork(
-        'D:/workspace/OCR_Search/backend/src/services/ocrService.js'
-      );
+      const process = fork(path.join(__dirname, '../services/ocrService.js'));
       process.send({ fileId: newFile._id });
 
       process.on('message', async (message) => {
@@ -84,8 +78,7 @@ const getFiles = async (req, res) => {
     const files = await File.find({ user: req.user.id }).sort({
       createdAt: -1,
     });
-    const total = files.length;
-    res.status(200).json({ files, total });
+    res.status(200).json({ files, total: files.length });
   } catch (error) {
     console.error('Server error:', error.message);
     res.status(500).json({ message: 'Server error' });
@@ -106,11 +99,7 @@ const searchFiles = async (req, res) => {
       text: { $regex: q, $options: 'i' },
       user: req.user.id,
     });
-
-    if (files.length === 0) {
-      return res.status(404).json({ message: 'No files found' });
-    }
-    res.json({ files });
+    res.status(200).json({ files });
   } catch (err) {
     console.error('Server error:', err.message);
     res.status(500).json({ message: 'Server error' });
@@ -129,24 +118,10 @@ const deleteFile = async (req, res) => {
 
     const pdfUrlParts = file.pdfUrl.split('/');
     const blobName = pdfUrlParts[pdfUrlParts.length - 1];
-    const containerName = 'ocr-search';
+    const containerName = process.env.CONTAINER_NAME;
 
     console.log('Deleting blob:', blobName, 'from container:', containerName);
-
-    const containerClient = blobServiceClient.getContainerClient(containerName);
-    await containerClient.deleteBlob(blobName);
-    // await blobService.deleteBlobIfExists(
-    //   containerName,
-    //   blobName,
-    //   (error, response) => {
-    //     if (error) {
-    //       console.error('Error deleting blob:', error);
-    //       throw error;
-    //     }
-    //     console.log('Azure Blob Storage response:', response);
-    //   }
-    // );
-
+    await azureBlobService.deleteFile(containerName, blobName);
     await File.findByIdAndDelete(fileId);
 
     res.status(200).json({ message: 'File deleted successfully' });
@@ -156,6 +131,7 @@ const deleteFile = async (req, res) => {
   }
 };
 
+// Get file by ID
 const getFileById = async (req, res) => {
   console.log('Fetching file by ID...');
   try {
@@ -170,6 +146,7 @@ const getFileById = async (req, res) => {
   }
 };
 
+// Generate SAS URL
 const generateSASUrl = async (req, res) => {
   console.log('Generating SAS URL for file:', req.params.pdfName);
   try {
@@ -180,29 +157,12 @@ const generateSASUrl = async (req, res) => {
 
     const pdfUrlParts = file.pdfUrl.split('/');
     const blobName = pdfUrlParts[pdfUrlParts.length - 1];
-    const containerName = 'ocr-search';
+    const containerName = process.env.CONTAINER_NAME;
 
-    var startDate = new Date();
-    var expiryDate = new Date(startDate);
-    expiryDate.setMinutes(startDate.getMinutes() + 100);
-    startDate.setMinutes(startDate.getMinutes() - 100);
-
-    var sharedAccessPolicy = {
-      AccessPolicy: {
-        Permissions: azure.BlobUtilities.SharedAccessPermissions.READ,
-        Start: startDate,
-        Expiry: expiryDate,
-      },
-    };
-
-    var token = blobService.generateSharedAccessSignature(
+    const sasUrl = await azureBlobService.generateSASUrl(
       containerName,
-      blobName,
-      sharedAccessPolicy
+      blobName
     );
-    var sasUrl = blobService.getUrl(containerName, blobName, token);
-
-    console.log(`Generated SAS URL: ${sasUrl}`);
     res.status(200).json({ sasUrl });
   } catch (error) {
     console.error('Error generating SAS URL:', error.message);

@@ -13,7 +13,7 @@ import ResetPassword from './pages/resetPassword';
 import Profile from './pages/profile';
 import UpdatePassword from './pages/updatePassword';
 import Files from './pages/files/files';
-import FileUpload from './components/fileUpload';
+import FileUpload from './pages/files/fileUpload';
 import AuthenticatedRoutes from './components/authenticatedRoutes';
 import '@fontsource/roboto/500.css';
 import { NotificationProvider } from './context/notification';

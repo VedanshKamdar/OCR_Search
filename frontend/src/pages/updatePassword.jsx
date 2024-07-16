@@ -17,10 +17,9 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { ENDPOINT_URLS } from '../urls';
-import DashboardHeader from '../components/dashboardHeader';
 import { http } from '../http';
 import { useNotification } from '../context/notification';
-
+import Page from '../components/page';
 
 const validationSchema = Yup.object().shape({
   currentPassword: Yup.string().required('Current password is required'),
@@ -86,129 +85,134 @@ const UpdatePassword = () => {
 
   return (
     <>
-      <DashboardHeader />
-      <Container maxWidth="sm">
-        <Grid
-          container
-          spacing={0}
-          direction="column"
-          alignItems="center"
-          justifyContent="center"
-          style={{
-            minHeight: '91vh',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        >
-          <Grid item xs={12} sm={8} md={6}>
-            <Paper
-              elevation={3}
-              sx={{
-                borderRadius: '10px',
-                padding: 3,
-                textAlign: 'center',
-                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                boxShadow: '0px 4px 20px rgba(167, 183, 245, 0.5)',
-              }}
-            >
-              <Typography component="h1" variant="h5" gutterBottom>
-                Update Password
-              </Typography>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  label="Current Password"
-                  type={showCurrentPassword ? 'text' : 'password'}
-                  {...register('currentPassword')}
-                  error={!!errors.currentPassword}
-                  helperText={errors.currentPassword?.message}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={togglePasswordVisibilityCP}
-                          edge="end"
-                        >
-                          {showCurrentPassword ? (
-                            <VisibilityOff />
-                          ) : (
-                            <Visibility />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  label="New Password"
-                  type={showNewPassword ? 'text' : 'password'}
-                  {...register('newPassword')}
-                  error={!!errors.newPassword}
-                  helperText={errors.newPassword?.message}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={togglePasswordVisibilityNP}
-                          edge="end"
-                        >
-                          {showNewPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  label="Confirm New Password"
-                  type={showConfirmNewPassword ? 'text' : 'password'}
-                  {...register('confirmNewPassword')}
-                  error={!!errors.confirmNewPassword}
-                  helperText={errors.confirmNewPassword?.message}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={togglePasswordVisibilityNCP}
-                          edge="end"
-                        >
-                          {showConfirmNewPassword ? (
-                            <VisibilityOff />
-                          ) : (
-                            <Visibility />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <Box sx={{ position: 'relative', mt: 3 }}>
-                  <Button
-                    type="submit"
+      <Page>
+        <Container maxWidth="sm">
+          <Grid
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            style={{
+              minHeight: '91vh',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <Grid item xs={12} sm={8} md={6}>
+              <Paper
+                elevation={3}
+                sx={{
+                  borderRadius: '10px',
+                  padding: 3,
+                  textAlign: 'center',
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  boxShadow: '0px 4px 20px rgba(167, 183, 245, 0.5)',
+                }}
+              >
+                <Typography component="h1" variant="h5" gutterBottom>
+                  Update Password
+                </Typography>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
                     fullWidth
-                    variant="contained"
-                    color="primary"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <CircularProgress size={24} />
-                    ) : (
-                      'Update Password'
-                    )}
-                  </Button>
-                </Box>
-              </form>
-            </Paper>
+                    label="Current Password"
+                    type={showCurrentPassword ? 'text' : 'password'}
+                    {...register('currentPassword')}
+                    error={!!errors.currentPassword}
+                    helperText={errors.currentPassword?.message}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={togglePasswordVisibilityCP}
+                            edge="end"
+                          >
+                            {showCurrentPassword ? (
+                              <VisibilityOff />
+                            ) : (
+                              <Visibility />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    label="New Password"
+                    type={showNewPassword ? 'text' : 'password'}
+                    {...register('newPassword')}
+                    error={!!errors.newPassword}
+                    helperText={errors.newPassword?.message}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={togglePasswordVisibilityNP}
+                            edge="end"
+                          >
+                            {showNewPassword ? (
+                              <VisibilityOff />
+                            ) : (
+                              <Visibility />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    label="Confirm New Password"
+                    type={showConfirmNewPassword ? 'text' : 'password'}
+                    {...register('confirmNewPassword')}
+                    error={!!errors.confirmNewPassword}
+                    helperText={errors.confirmNewPassword?.message}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={togglePasswordVisibilityNCP}
+                            edge="end"
+                          >
+                            {showConfirmNewPassword ? (
+                              <VisibilityOff />
+                            ) : (
+                              <Visibility />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <Box sx={{ position: 'relative', mt: 3 }}>
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <CircularProgress size={24} />
+                      ) : (
+                        'Update Password'
+                      )}
+                    </Button>
+                  </Box>
+                </form>
+              </Paper>
+            </Grid>
           </Grid>
-        </Grid>
-      </Container>
+        </Container>
+      </Page>
     </>
   );
 };

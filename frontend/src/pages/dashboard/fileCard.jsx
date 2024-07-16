@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -5,7 +6,7 @@ import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
-const StyledCard = styled(Card)(({ theme }) => ({
+const StyledCard = styled(Card)(() => ({
   width: '150px',
   margin: '10px',
   boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
@@ -37,12 +38,19 @@ const FileCard = ({ file, onViewClick }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <ViewButton size="small" onClick={() => onViewClick(file)}>
+        <ViewButton size="small" onClick={onViewClick}>
           View
         </ViewButton>
       </CardActions>
     </StyledCard>
   );
+};
+
+FileCard.propTypes = {
+  file: PropTypes.shape({
+    pdfName: PropTypes.string.isRequired,
+  }).isRequired,
+  onViewClick: PropTypes.func.isRequired,
 };
 
 export default FileCard;

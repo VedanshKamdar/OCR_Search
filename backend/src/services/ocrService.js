@@ -38,7 +38,7 @@ process.on('message', async (message) => {
 
     file.text = text;
     file.status = 'processed';
-    file.pdfUrl = `https://ocrfile.blob.core.windows.net/ocr-search/${pdfBlobName}`;
+    file.pdfUrl = `${process.env.BLOB_PDF_URL}/${pdfBlobName}`;
     file.pdfName = pdfBlobName;
     await file.save();
 
@@ -68,7 +68,7 @@ async function generatePDFStream(text) {
 }
 
 async function uploadToAzureBlobStorage(blobName, stream) {
-  const containerName = 'ocr-search';
+  const containerName = process.env.CONTAINER_NAME;
 
   const containerClient = blobServiceClient.getContainerClient(containerName);
   const blockBlobClient = containerClient.getBlockBlobClient(blobName);

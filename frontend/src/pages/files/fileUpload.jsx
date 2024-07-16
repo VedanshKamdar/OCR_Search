@@ -1,12 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 
-import { ENDPOINT_URLS } from '../urls';
-import { http } from '../http';
+import { ENDPOINT_URLS } from '../../urls';
+import { http } from '../../http';
 
 const ModalContainer = styled('div')(({ theme }) => ({
   backgroundColor: '#041d32c2',
@@ -175,6 +176,11 @@ const FileUpload = ({ onClose, onUploadSuccess }) => {
       </Snackbar>
     </ModalContainer>
   );
+};
+
+FileUpload.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onUploadSuccess: PropTypes.func.isRequired,
 };
 
 export default FileUpload;

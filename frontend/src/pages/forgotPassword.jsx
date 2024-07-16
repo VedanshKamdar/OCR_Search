@@ -10,10 +10,10 @@ import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 
-import DashboardHeader from '../components/dashboardHeader';
 import { ENDPOINT_URLS } from '../urls';
 import { http } from '../http';
 import { useNotification } from '../context/notification';
+import Page from '../components/page';
 
 const ForgotPassword = () => {
   const {
@@ -43,58 +43,59 @@ const ForgotPassword = () => {
 
   return (
     <div>
-      <DashboardHeader />
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Paper
-          elevation={3}
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            padding: 3,
-          }}
-        >
-          <Typography component="h1" variant="h5" gutterBottom>
-            Forgot Password
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit(onSubmit)}
-            noValidate
-            sx={{ mt: 1 }}
+      <Page>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Paper
+            elevation={3}
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              padding: 3,
+            }}
           >
-            <TextField
-              {...register('email', {
-                required: 'Email is required',
-                pattern: {
-                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                  message: 'Invalid email address',
-                },
-              })}
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              autoComplete="email"
-              autoFocus
-              error={!!errors.email}
-              helperText={errors.email ? errors.email.message : ''}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              sx={{ mt: 3, mb: 2 }}
-              disabled={loading}
+            <Typography component="h1" variant="h5" gutterBottom>
+              Forgot Password
+            </Typography>
+            <Box
+              component="form"
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
+              sx={{ mt: 1 }}
             >
-              {loading ? <CircularProgress size={24} /> : 'Send Reset Link'}
-            </Button>
-          </Box>
-        </Paper>
-      </Container>
+              <TextField
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                    message: 'Invalid email address',
+                  },
+                })}
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                autoComplete="email"
+                autoFocus
+                error={!!errors.email}
+                helperText={errors.email ? errors.email.message : ''}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                sx={{ mt: 3, mb: 2 }}
+                disabled={loading}
+              >
+                {loading ? <CircularProgress size={24} /> : 'Send Reset Link'}
+              </Button>
+            </Box>
+          </Paper>
+        </Container>
+      </Page>
     </div>
   );
 };
