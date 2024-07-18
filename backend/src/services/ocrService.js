@@ -3,17 +3,16 @@ const Tesseract = require('tesseract.js');
 const File = require('../models/file');
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
-const { BlobServiceClient } = require('@azure/storage-blob');
 const path = require('path');
 const dotenv = require('dotenv');
+const { uploadFile } = require('./azureBlobService');
 
 dotenv.config();
 
-mongoose.connect(process.env.MONGO_URI);
-
-const blobServiceClient = BlobServiceClient.fromConnectionString(
-  process.env.AZURE_STORAGE_CONNECTION_STRING
-);
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 process.on('message', async (message) => {
   const { fileId } = message;
@@ -34,7 +33,7 @@ process.on('message', async (message) => {
     );
     const pdfStream = await generatePDFStream(text);
 
-    await uploadToAzureBlobStorage(pdfBlobName, pdfStream);
+    await uploadFile(process.env.CONTAINER_NAME, pdfBlobName, pdfStream);
 
     file.text = text;
     file.status = 'processed';
@@ -62,21 +61,12 @@ async function generatePDFStream(text) {
       resolve(Buffer.concat(chunks));
     });
 
+    doc.on('error', (err) => {
+      reject(err);
+    });
+
     doc.text(text);
     doc.end();
-  });
-}
-
-async function uploadToAzureBlobStorage(blobName, stream) {
-  const containerName = process.env.CONTAINER_NAME;
-
-  const containerClient = blobServiceClient.getContainerClient(containerName);
-  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-
-  await blockBlobClient.uploadData(stream, {
-    blobHTTPHeaders: {
-      blobContentType: 'application/pdf',
-    },
   });
 }
 

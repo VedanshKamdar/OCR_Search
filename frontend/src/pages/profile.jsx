@@ -9,7 +9,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Avatar from '@mui/material/Avatar';
 
-import { useProfile } from '../context/profileContext';
+import { useProfile } from '../context/profile';
 import { useNotification } from '../context/notification';
 import Page from '../components/page';
 import profileImage from './profile.jpg';

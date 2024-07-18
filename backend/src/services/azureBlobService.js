@@ -1,12 +1,17 @@
-const { BlobServiceClient, generateBlobSASQueryParameters } = require('@azure/storage-blob');
+const {
+  BlobServiceClient,
+  generateBlobSASQueryParameters,
+} = require('@azure/storage-blob');
 require('dotenv').config();
 
-const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
+const blobServiceClient = BlobServiceClient.fromConnectionString(
+  process.env.AZURE_STORAGE_CONNECTION_STRING
+);
 
 const uploadFile = async (containerName, blobName, stream) => {
   const containerClient = blobServiceClient.getContainerClient(containerName);
   const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-  
+
   await blockBlobClient.uploadData(stream, {
     blobHTTPHeaders: { blobContentType: 'application/pdf' },
   });

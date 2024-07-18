@@ -1,6 +1,6 @@
-import * as React from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { keyframes } from '@mui/system';
-
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -15,10 +15,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-import { useNavigate } from 'react-router-dom';
-
 const pages = [];
-const settings = ['Profile', 'Change Password', 'Logout'];
 
 const clickAnimation = keyframes`
   0% {
@@ -33,9 +30,27 @@ const clickAnimation = keyframes`
 `;
 
 function DashboardHeader() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
   const navigate = useNavigate();
+
+  const menuItems = [
+    {
+      name: 'Profile',
+      route: '/profile',
+    },
+    {
+      name: 'Change Password',
+      route: '/update-password',
+    },
+    {
+      name: 'Logout',
+      onClick: () => {
+        localStorage.removeItem('token');
+        navigate('/');
+      },
+    },
+  ];
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -53,22 +68,13 @@ function DashboardHeader() {
     setAnchorElUser(null);
   };
 
-  const handleLogout = async () => {
-    localStorage.removeItem('token');
-    navigate('/');
-  };
-
-  const handleMenuClick = (setting) => {
+  const handleMenuClick = (menuItem) => {
     setAnchorElUser(null);
 
-    if (setting === 'Profile') {
-      navigate('/profile');
-    } else if (setting === 'Dashboard') {
-      navigate('/dashboard');
-    } else if (setting === 'Change Password') {
-      navigate('/update-password');
-    } else if (setting === 'Logout') {
-      handleLogout();
+    if (menuItem.route) {
+      navigate(menuItem.route);
+    } else if (menuItem.onClick) {
+      menuItem.onClick();
     }
   };
 
@@ -232,12 +238,12 @@ function DashboardHeader() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
+              {menuItems.map((menuItem) => (
                 <MenuItem
-                  key={setting}
-                  onClick={() => handleMenuClick(setting)}
+                  key={menuItem.name}
+                  onClick={() => handleMenuClick(menuItem)}
                 >
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography textAlign="center">{menuItem.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>

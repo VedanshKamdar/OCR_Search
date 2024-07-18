@@ -90,9 +90,13 @@ const FileUpload = ({ onClose, onUploadSuccess }) => {
     formData.append('file', selectedFile);
 
     try {
-      const uploadResponse = await http.post(ENDPOINT_URLS.FILES, formData, {
-        headers: { Authorization: `Bearer ${authToken}` },
-      });
+      const uploadResponse = await http.post(
+        ENDPOINT_URLS.GET_FILES,
+        formData,
+        {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }
+      );
       setSnackbarMessage('File uploaded successfully.');
       setSnackbarSeverity('success');
       setOpenSnackbar(true);

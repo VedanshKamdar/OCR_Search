@@ -148,6 +148,8 @@ const getFileById = async (req, res) => {
 
 // Generate SAS URL
 const generateSASUrl = async (req, res) => {
+  console.log('Received request to generate SAS URL');
+  console.log('Request parameters:', req.params);
   console.log('Generating SAS URL for file:', req.params.pdfName);
   try {
     const file = await File.findOne({ pdfName: req.params.pdfName });

@@ -5,7 +5,7 @@ export const ENDPOINT_URLS = {
   FORGOT_PASSWORD: 'v1/api/auth/forgot-password',
   RESET_PASSWORD: 'v1/api/auth/reset-password',
   PROFILE: 'v1/api/auth/profile',
-  FILES: 'v1/api/files',
+  GET_FILES: 'v1/api/files',
   AZURE_SAS: 'v1/api/files/sas',
   FILES_SEARCH: 'v1/api/files/search',
 };

@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { CircularProgress, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 
-import { ProfileProvider, useProfile } from '../context/profileContext';
+import { useProfile } from '../context/profile';
 import { ENDPOINT_URLS } from '../urls';
 import { http } from '../http';
 
 const AuthenticatedRoutes = ({ component: Component }) => {
   const navigate = useNavigate();
-  const { updateProfile } = useProfile();
+  const { profile, updateProfile } = useProfile();
   const [isLoading, setLoading] = useState(true);
-  const [isProfileFetched, setProfileFetched] = useState(false);
 
   const getProfile = useCallback(async () => {
     try {
@@ -22,7 +22,6 @@ const AuthenticatedRoutes = ({ component: Component }) => {
       const response = await http.get(ENDPOINT_URLS.PROFILE);
       if (response.status === 200) {
         updateProfile(response.data);
-        setProfileFetched(true);
       }
     } catch (error) {
       console.error('Error fetching user profile:', error.message);
@@ -33,10 +32,10 @@ const AuthenticatedRoutes = ({ component: Component }) => {
   }, [navigate, updateProfile]);
 
   useEffect(() => {
-    if (!isProfileFetched) {
+    if (!profile) {
       getProfile();
     }
-  }, [updateProfile, isProfileFetched, navigate, getProfile]);
+  }, [updateProfile, profile, navigate, getProfile]);
 
   if (isLoading) {
     return (
@@ -61,10 +60,4 @@ AuthenticatedRoutes.propTypes = {
   component: PropTypes.elementType.isRequired,
 };
 
-const WrappedAuthenticatedRoutes = (props) => (
-  <ProfileProvider>
-    <AuthenticatedRoutes {...props} />
-  </ProfileProvider>
-);
-
-export default WrappedAuthenticatedRoutes;
+export default AuthenticatedRoutes;

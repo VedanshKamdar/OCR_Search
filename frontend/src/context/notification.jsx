@@ -27,6 +27,10 @@ export const NotificationProvider = ({ children }) => {
         open={snackbarOpen}
         autoHideDuration={2000}
         onClose={closeSnackbar}
+        sx={{
+          alignItems: 'baseline',
+        }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={closeSnackbar} severity={snackbarSeverity}>
           {snackbarMessage}

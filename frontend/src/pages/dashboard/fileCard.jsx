@@ -38,7 +38,7 @@ const FileCard = ({ file, onViewClick }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <ViewButton size="small" onClick={onViewClick}>
+        <ViewButton size="small" onClick={() => onViewClick(file)}>
           View
         </ViewButton>
       </CardActions>

@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+
 import DashboardHeader from './dashboardHeader';
 
 const Page = ({ children }) => {

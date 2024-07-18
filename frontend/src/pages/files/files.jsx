@@ -36,7 +36,7 @@ const Files = () => {
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const response = await http.get(ENDPOINT_URLS.FILES);
+        const response = await http.get(ENDPOINT_URLS.GET_FILES);
         setFiles(response.data.files || []);
         setLoading(false);
       } catch (error) {
@@ -57,7 +57,7 @@ const Files = () => {
     setDeleting(true);
     try {
       await http.delete(
-        `${ENDPOINT_URLS.FILES}/${fileViewDelete.fileToDelete._id}`
+        `${ENDPOINT_URLS.GET_FILES}/${fileViewDelete.fileToDelete._id}`
       );
       setFiles(
         files.filter((file) => file._id !== fileViewDelete.fileToDelete._id)
@@ -80,7 +80,6 @@ const Files = () => {
         const { sasUrl } = response.data;
         setViewFile({ ...file, pdfUrl: sasUrl });
       } catch (error) {
-        console.error('Error generating SAS URL:', error);
         showNotification('Failed to generate SAS URL', 'error');
       }
     },
@@ -103,7 +102,9 @@ const Files = () => {
     (fileId) => {
       const interval = setInterval(async () => {
         try {
-          const response = await http.get(`${ENDPOINT_URLS.FILES}/${fileId}`);
+          const response = await http.get(
+            `${ENDPOINT_URLS.GET_FILES}/${fileId}`
+          );
           const updatedFile = response.data.file;
           setFiles((prevFiles) =>
             prevFiles.map((file) => (file._id === fileId ? updatedFile : file))

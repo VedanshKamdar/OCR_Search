@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
@@ -19,7 +20,7 @@ const DeleteFile = ({ file, onDeleteSuccess, onClose }) => {
 
     setDeleting(true);
     try {
-      await http.delete(`${ENDPOINT_URLS.FILES}/${file._id}`);
+      await http.delete(`${ENDPOINT_URLS.GET_FILES}/${file._id}`);
       onDeleteSuccess(file._id);
       showNotification('File deleted successfully', 'success');
       onClose();
@@ -36,7 +37,7 @@ const DeleteFile = ({ file, onDeleteSuccess, onClose }) => {
       <DialogTitle>Confirm Delete</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Are you sure you want to delete the file "{file?.filename}"?
+          Are you sure you want to delete the file {file?.filename}?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -49,6 +50,15 @@ const DeleteFile = ({ file, onDeleteSuccess, onClose }) => {
       </DialogActions>
     </Dialog>
   );
+};
+
+DeleteFile.propTypes = {
+  file: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    filename: PropTypes.string.isRequired,
+  }).isRequired,
+  onDeleteSuccess: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default DeleteFile;
